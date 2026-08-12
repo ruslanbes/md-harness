@@ -6,27 +6,6 @@ Reusable documentation + engineering-process layouts for a single-repo single-de
 
 **Assumption:** one git repository (monolith or monorepo).
 
-## Variants
-
-| | [`simple/`](simple/) | [`advanced/`](advanced/) |
-|--|----------------------|--------------------------|
-| **Role** | Minimal process + docs | Same core flow; richer task workspaces and optional external tracker IDs |
-| **Task location** | Single file `dev/tasks/<id>.md` | Folder `dev/tasks/<id>/` with `task.md` plus any supporting files (free-form) |
-| **Task ID** | kebab slug only | `[external-tracker-id-]kebab-slug` (local slug fine until a ticket exists) |
-| **When to use** | Small solo projects; tasks fit in one doc | Heavier planning, analysis, championing, coordination; Jira/Linear/etc. |
-
-Shared in both: `dev/` = how we run the project; `docs/` = durable product/architecture knowledge; release cleans finished task artifacts after promoting lasting content.
-
-## Comparison (quick)
-
-| Concern | Simple | Advanced |
-|---------|--------|----------|
-| Create task detail | Copy `tasks/TEMPLATE.md` → `tasks/<id>.md` | Copy `tasks/TEMPLATE/task.md` → `tasks/<id>/task.md` |
-| Main task file | `dev/tasks/<id>.md` | `dev/tasks/<id>/task.md` |
-| Extra material | Inline in the same file | Free-form files/folders next to `task.md` |
-| Tracker link | Not modeled | Optional prefix on the task ID; rename when a ticket appears |
-| Release cleanup | Delete `tasks/<id>.md` | Delete whole `tasks/<id>/` folder |
-
 ## Layout (`simple/`)
 
 ```
@@ -79,12 +58,12 @@ Fill in:
 2. `docs/adr/` — first real ADR when the stack or major architecture is chosen (often `adr-000-…`).
 3. `dev/STATUS.md` — current focus for the first session.
 
-Optional: commit `.cursor/rules/workflow.mdc` even if other editor config is gitignored — or keep it local.
+Optional: commit `.cursor/rules/workflow.mdc` if you use Cursor — or gitignore it and keep it local.
 
 ## Agent prompts that should work immediately
 
 ```
-This project is a data transformation tool and a static HTML site for data visualisation (charts, metrics, insights). Input raw data are stored as json files. Create a task doc to propose and lock a technology stack and establish project folder structure.
+This project is a data transformation tool and a static HTML site for data visualisation (charts, metrics, insights). Input raw data are stored as json files. Create a task doc to establish a technology stack and project folder structure.
 ```
 
 ```
@@ -199,9 +178,30 @@ flowchart TD
 
 Task detail files are temporary. After release, shipped behavior lives in `CHANGELOG.md`; contracts and concepts live in ADRs, FAQ, layer READMEs, and process notes in `dev/README.md`.
 
+## Variants
+
+| | [`simple/`](simple/) | [`advanced/`](advanced/) |
+|--|----------------------|--------------------------|
+| **Role** | Minimal process + docs | Same core flow; richer task workspaces and optional external tracker IDs |
+| **Task location** | Single file `dev/tasks/<id>.md` | Folder `dev/tasks/<id>/` with `task.md` plus any supporting files (free-form) |
+| **Task ID** | kebab slug only | `[external-tracker-id-]kebab-slug` (local slug fine until a ticket exists) |
+| **When to use** | Small solo projects; tasks fit in one doc | Heavier planning, analysis, championing, coordination; Jira/Linear/etc. |
+
+Shared in both: `dev/` = how we run the project; `docs/` = durable product/architecture knowledge; release cleans finished task artifacts after promoting lasting content.
+
+## Comparison (quick)
+
+| Concern | Simple | Advanced |
+|---------|--------|----------|
+| Create task detail | Copy `tasks/TEMPLATE.md` → `tasks/<id>.md` | Copy `tasks/TEMPLATE/task.md` → `tasks/<id>/task.md` |
+| Main task file | `dev/tasks/<id>.md` | `dev/tasks/<id>/task.md` |
+| Extra material | Inline in the same file | Free-form files/folders next to `task.md` |
+| Tracker link | Not modeled | Optional prefix on the task ID; rename when a ticket appears |
+| Release cleanup | Delete `tasks/<id>.md` | Delete whole `tasks/<id>/` folder |
+
 ## See also
 
-- [FAQ](FAQ.md) — why markdown over Jira/Issues, and how this compares to Backlog.md, Spec Kit, and Beads
+- [FAQ](FAQ.md) — why use it at all and how this compares to Backlog.md, Spec Kit, and Beads
 
 ## License
 
