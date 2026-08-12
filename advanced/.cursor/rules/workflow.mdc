@@ -1,0 +1,35 @@
+---
+description: Session workflow — read status, update backlog, avoid nested task numbering
+alwaysApply: true
+---
+
+# Workflow
+
+## Start of session
+
+1. Read `dev/STATUS.md`.
+2. Read `dev/BACKLOG.md` if the current task or blockers are unclear.
+3. Read `dev/tasks/<task-id>/task.md` when working on a task that has a detail folder; open other files in that folder as needed.
+
+## During work
+
+- Follow `AGENTS.md` for project ground rules (`dev/README.md`).
+- Work one task at a time unless the user directs otherwise.
+- Do not choose or assume a tech stack until project docs record the choice (typically an ADR under `docs/adr/` and pointers in `dev/README.md`).
+
+## Task updates
+
+- Use task IDs of the form `[external-tracker-id-]kebab-slug` (local slug alone is fine until a ticket exists). Do not use hierarchical numbers like `2.c.III.5`.
+- When status changes, update both `dev/BACKLOG.md` and `dev/STATUS.md`.
+- If blocked, set status to `blocked`, record the blocker in `STATUS.md`, and add new tasks for unexpected work.
+- Link related tasks with `parent:` or `blocked_by:`.
+- When a local task gets an external ticket, rename `dev/tasks/<id>/` and the backlog heading to include the tracker id.
+
+## End of meaningful work
+
+- Refresh `dev/STATUS.md` session notes (what changed, what's next).
+- Mark tasks `done` only when their `done_when` criteria are met.
+
+## Release
+
+When cutting a version or cleaning shipped work, follow `dev/RELEASE.md` (changelog promotion, backlog + task-folder cleanup).

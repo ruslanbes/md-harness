@@ -1,0 +1,24 @@
+# Architecture Decision Records
+
+ADRs capture **durable** choices (stack, boundaries, contracts) that should outlive any single task.
+
+## When to write an ADR
+
+- Choosing or changing language, frameworks, hosting, or major libraries.
+- Defining system boundaries or data/API contracts that other work depends on.
+- Recording a trade-off so future agents do not re-litigate it in every task.
+
+Prefer a **task folder** (`dev/tasks/<task-id>/task.md` plus any supporting files you need) for short-lived design while building a feature. On release, promote lasting decisions from the task into an ADR (or FAQ / layer README) before deleting the task folder — see [`dev/RELEASE.md`](../../dev/RELEASE.md).
+
+## Conventions
+
+- Files: `docs/adr/adr-NNN-short-title.md` (zero-padded number, kebab-case title).
+- Status: `Proposed` | `Accepted` | `Superseded` | `Deprecated`.
+- Link related ADRs and FAQ pages.
+- Copy [`TEMPLATE.md`](TEMPLATE.md) for a new record.
+
+## Index
+
+| ADR | Title | Status |
+|-----|-------|--------|
+| — | _(none yet)_ | — |

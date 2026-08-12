@@ -1,0 +1,208 @@
+# md-harness
+
+Markdown-native agent harness for solo monorepos.
+
+Reusable documentation + engineering-process layouts for a single-repo single-developer project.
+
+**Assumption:** one git repository (monolith or monorepo).
+
+## Variants
+
+| | [`simple/`](simple/) | [`advanced/`](advanced/) |
+|--|----------------------|--------------------------|
+| **Role** | Minimal process + docs | Same core flow; richer task workspaces and optional external tracker IDs |
+| **Task location** | Single file `dev/tasks/<id>.md` | Folder `dev/tasks/<id>/` with `task.md` plus any supporting files (free-form) |
+| **Task ID** | kebab slug only | `[external-tracker-id-]kebab-slug` (local slug fine until a ticket exists) |
+| **When to use** | Small solo projects; tasks fit in one doc | Heavier planning, analysis, championing, coordination; Jira/Linear/etc. |
+
+Shared in both: `dev/` = how we run the project; `docs/` = durable product/architecture knowledge; release cleans finished task artifacts after promoting lasting content.
+
+## Comparison (quick)
+
+| Concern | Simple | Advanced |
+|---------|--------|----------|
+| Create task detail | Copy `tasks/TEMPLATE.md` → `tasks/<id>.md` | Copy `tasks/TEMPLATE/task.md` → `tasks/<id>/task.md` |
+| Main task file | `dev/tasks/<id>.md` | `dev/tasks/<id>/task.md` |
+| Extra material | Inline in the same file | Free-form files/folders next to `task.md` |
+| Tracker link | Not modeled | Optional prefix on the task ID; rename when a ticket appears |
+| Release cleanup | Delete `tasks/<id>.md` | Delete whole `tasks/<id>/` folder |
+
+## Layout (`simple/`)
+
+```
+simple/                   ← copy these files into a new repo root
+  AGENTS.md               Agent entrypoint → dev/README.md
+  CHANGELOG.md            Keep a Changelog ([Unreleased] + dated releases)
+  .cursor/rules/
+    workflow.mdc          Session workflow for Cursor agents
+  docs/
+    adr/
+      README.md           When/how to write ADRs
+      TEMPLATE.md         Copy → adr-NNN-short-title.md
+    faq/
+      README.md           When/how to write FAQ pages
+      TEMPLATE.md         Copy → docs/faq/<topic>.md
+  dev/                    How we run the project
+    README.md             Setup, ground rules, doc index
+    BACKLOG.md            Flat task index
+    STATUS.md             Current focus / blockers / session notes
+    RELEASE.md            Promote Unreleased → version; clean tasks
+    tasks/
+      README.md           Optional detail files (temporary)
+      TEMPLATE.md         Copy → dev/tasks/<task-id>.md
+```
+
+## Layout (`advanced/` vs `simple/`)
+
+Same tree as [`simple/`](simple/), except under `dev/tasks/`:
+
+```
+dev/tasks/
+  README.md           Task folder conventions + ID rules
+  TEMPLATE/
+    task.md           Copy → dev/tasks/<task-id>/task.md
+                      (other files in the task folder are optional, free-form)
+```
+
+Instead of a single `TEMPLATE.md` / `tasks/<id>.md`, each task is a folder with required `task.md`. Task IDs may use an optional external-tracker prefix. Release deletes the whole task folder.
+
+## Install into an empty repo
+
+```sh
+cp -R simple/. /path/to/new-repo/     # or: cp -R advanced/. /path/to/new-repo/
+# then replace / create the project's own README.md (not included)
+```
+
+Fill in:
+
+1. `dev/README.md` — local setup, test/build commands, project-specific ground rules.
+2. `docs/adr/` — first real ADR when the stack or major architecture is chosen (often `adr-000-…`).
+3. `dev/STATUS.md` — current focus for the first session.
+
+Optional: commit `.cursor/rules/workflow.mdc` even if other editor config is gitignored — or keep it local.
+
+## Agent prompts that should work immediately
+
+```
+This project is a data transformation tool and a static HTML site for data visualisation (charts, metrics, insights). Input raw data are stored as json files. Create a task doc to propose and lock a technology stack and establish project folder structure.
+```
+
+```
+Draft a task doc to implement XYZ.
+```
+
+```
+What are current open tasks?
+```
+
+```
+Check the done tasks. Is it worth cutting a release?
+```
+
+```
+Prepare a release: follow dev/RELEASE.md.
+```
+
+**Simple:** agents create `dev/tasks/<kebab-id>.md` from the task template, add a `## <task-id>` block to `BACKLOG.md`, and keep `STATUS.md` current. On release, shipped behavior moves to `CHANGELOG.md` and task detail files are deleted.
+
+**Advanced:** same flow, but agents create `dev/tasks/<task-id>/` from `TEMPLATE/` (main file `task.md`), using `[tracker-id-]slug` IDs when a ticket exists. On release, whole finished task folders are deleted after promoting durable content.
+
+## Docs roles
+
+| Kind | Location | Role |
+|------|----------|------|
+| Process | `dev/` | How we run the project: setup, ground rules, release runbook, plus living backlog/status and temporary task detail |
+| Knowledge | `docs/` (ADRs, FAQ), root `CHANGELOG.md`, layer READMEs you add | Product and architecture knowledge that outlives any task |
+| Session work | `dev/BACKLOG.md`, `dev/STATUS.md`, `dev/tasks/*` | Current work tracking; task artifacts are cleaned on release |
+
+## Development flow (`simple/`)
+
+Rough path: **prompt → task doc → implementation → changelog → durable docs** (with cleanup at release).
+
+Paths below match **simple** (`dev/tasks/<id>.md`). In **advanced**, substitute `dev/tasks/<id>/task.md` and delete the whole task folder on release.
+
+### 1. End-to-end
+
+```mermaid
+flowchart LR
+  P[User prompt] --> T[Task doc + backlog entry]
+  T --> I[Implementation]
+  I --> C["CHANGELOG (Unreleased section)"]
+  C --> R[Release]
+  R --> D[Durable docs]
+  R --> X[Delete finished task files]
+```
+
+### 2. What a session reads first
+
+Cursor `workflow.mdc` steers the Cursor agent. Humans and other agents read `dev/README.md` and get the same idea.
+
+```mermaid
+flowchart TD
+  Start[Start of session / new prompt] --> S[dev/STATUS.md]
+  S --> B[dev/BACKLOG.md]
+  B --> TD{Active task has detail file?}
+  TD -->|yes| Task[dev/tasks/id.md]
+  TD -->|no| Rules[AGENTS.md → dev/README.md]
+  Task --> Rules
+  Rules --> ADR[docs/adr/ and docs/faq/ as needed]
+```
+
+### 3. Prompt → task doc
+
+```mermaid
+flowchart TD
+  Prompt[User: draft / create a task…] --> Read[Read STATUS, BACKLOG, templates]
+  Read --> Create["Create dev/tasks/kebab-id.md from TEMPLATE"]
+  Create --> Index["Add ## kebab-id block to BACKLOG.md"]
+  Index --> Focus[Update STATUS.md: active task / next action]
+  Create --> Lock[Lock decisions in the task doc before coding]
+  Lock --> MaybeADR{Durable architecture choice?}
+  MaybeADR -->|yes, early| ADR[Optional: write/update docs/adr/…]
+  MaybeADR -->|no / later| Ready[Ready to implement]
+  ADR --> Ready
+```
+
+### 4. Implementation → changelog
+
+```mermaid
+flowchart TD
+  Work[Implement one task] --> Code[Code + tests]
+  Code --> Status[Refresh STATUS.md session notes]
+  Status --> Done{done_when met?}
+  Done -->|no| Work
+  Done -->|yes| Unreleased["Add user-facing notes to CHANGELOG [Unreleased]"]
+  Unreleased --> Backlog[Mark backlog status done / hand off]
+```
+
+While building, short-lived design stays in the task doc. Promote lasting decisions into ADRs / FAQ / `dev/README.md` when they should outlive the task — often at release, sometimes earlier.
+
+### 5. Release: promote, then clean
+
+```mermaid
+flowchart TD
+  Cut[Follow dev/RELEASE.md] --> PromoteTask[Read finished task docs]
+  PromoteTask --> Gaps{Lasting content missing from durable docs?}
+  Gaps -->|process / ground rules| DevReadme[Update dev/README.md]
+  Gaps -->|architecture| ADR[Update docs/adr/…]
+  Gaps -->|concepts / how-tos| FAQ[Update docs/faq/…]
+  Gaps -->|user-facing behavior| CLAlready[Already in CHANGELOG]
+  DevReadme --> Version
+  ADR --> Version
+  FAQ --> Version
+  CLAlready --> Version
+  Gaps -->|no gaps| Version["Promote [Unreleased] → dated [X.Y.Z]"]
+  Version --> CleanBacklog[Remove shipped / cancelled backlog rows]
+  CleanBacklog --> DeleteTasks[Delete shipped / cancelled tasks/*.md]
+  DeleteTasks --> Status[Refresh STATUS.md for what's next]
+```
+
+Task detail files are temporary. After release, shipped behavior lives in `CHANGELOG.md`; contracts and concepts live in ADRs, FAQ, layer READMEs, and process notes in `dev/README.md`.
+
+## See also
+
+- [FAQ](FAQ.md) — why markdown over Jira/Issues, and how this compares to Backlog.md, Spec Kit, and Beads
+
+## License
+
+[Apache License 2.0](LICENSE)
