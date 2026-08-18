@@ -1,6 +1,6 @@
 # FAQ
 
-Stable explanations that outlive individual tasks: domain concepts, formulas, CLI/API how-tos, conventions.
+Explanations that outlive individual tasks: domain concepts, formulas, CLI/API how-tos, conventions.
 
 ## When to add a page
 

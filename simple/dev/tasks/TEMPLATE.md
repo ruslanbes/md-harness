@@ -14,24 +14,25 @@ One clear outcome. Observable for humans and agents.
 
 ## Decisions
 
-Lock choices here before coding. Prefer a table:
+Do not implement if any row is `open`. Flip to `locked` when the user accepts. 
 
-| # | Topic | Decision |
-|---|--------|----------|
-| 1 | … | … |
-
-Unresolved items: list explicitly and clarify with the user before implementation.
+| # | Topic | Status | Decision |
+|---|--------|--------|----------|
+| 1 | … | open | |
 
 ## Non-goals
 
 What this task deliberately skips.
 
+## Implementation
+
+Rough implementation details.
+
 ## Done when
 
-- [ ] Observable acceptance criteria (tests, docs, behavior).
+- [ ] Observable acceptance criteria (build success, tests).
 - [ ] Durable docs updated if contracts or user-facing behavior changed (`dev/README.md` / ADR / FAQ / layer README as needed).
-- [ ] `CHANGELOG.md` `[Unreleased]` updated when the work is user-visible.
-- [ ] `BACKLOG.md` / `STATUS.md` reflect completion or handoff.
+- [ ] Anything else.
 
 ## Notes
 

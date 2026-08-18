@@ -2,9 +2,58 @@
 
 Markdown-native agent harness for solo monorepos.
 
-Reusable documentation + engineering-process layouts for a single-repo single-developer project.
+Documentation + engineering-process layouts for a single-repo single-developer project.
 
-**Assumption:** one git repository (monolith or monorepo).
+Not a tool, not a skill, not a plugin. It's rather a skeleton for your repo that supports you if you are doing development with a coding agent. Instead of starting with an empty repo you start with md-harness.
+
+## Install into an empty repo
+
+Launch a coding agent or IDE of your choice (Cursor, VScode, Claude, Gemini etc.) in an empty dir and prompt it: 
+
+> Install a simple md-harness from https://github.com/ruslanbes/md-harness
+
+Or (if you want to do it by hand): 
+
+```sh
+git clone https://github.com/ruslanbes/md-harness.git
+cp -R md-harness/simple/. /path/to/new-repo/
+rm -rf md-harness
+cd /path/to/new-repo/
+# launch your favorite editor with a coding agent: "cursor .", "code .", "idea ." etc.
+```
+
+## First agent prompts
+
+```
+This project will use md-harness, learn how to track tasks, document decisions and release the project. 
+```
+
+```
+This project is: <describe your project and requirements>. Create a first task doc to setup a technology stack and project folder structure.
+```
+
+## What is the task doc?
+
+It's a mix of a [User Story](https://en.wikipedia.org/wiki/User_story) and a [Specification](https://en.wikipedia.org/wiki/Specification_(technical_standard)).
+
+**Simple:** agents create `dev/tasks/<kebab-id>.md` from the task template, add a `## <task-id>` block to `BACKLOG.md`, and keep `STATUS.md` current. On release, shipped behavior moves to `CHANGELOG.md` and task docs are deleted.
+
+**Advanced:** same flow, but agents create `dev/tasks/<task-id>/` from `TEMPLATE/` (main file `task.md`), using `[tracker-id-]slug` IDs when a ticket exists. On release, whole finished task folders are deleted after promoting durable content.
+
+Each task doc contains (usually):
+
+- Problem statement
+- List of decisions
+- Implementation details
+- Done when checklist
+
+**List of decisions** is what you (a human) mainly want to read. You are the decision maker and only you are responsible for locking these decisions. Agent can suggest them, but your voice is final.
+
+Check other sections in the [simple/dev/tasks/TEMPLATE.md](simple/dev/tasks/TEMPLATE.md).
+
+## Implementing a task
+
+Read the task doc created by the agent, walk through the decisions and lock them (important!), check everything else in the task doc as much as you can. If you are satisfied, prompt the agent to implement the task and go drink a cup of whatever. Check the result. Rinse. Repeat.
 
 ## Layout (`simple/`)
 
@@ -44,47 +93,6 @@ dev/tasks/
 ```
 
 Instead of a single `TEMPLATE.md` / `tasks/<id>.md`, each task is a folder with required `task.md`. Task IDs may use an optional external-tracker prefix. Release deletes the whole task folder.
-
-## Install into an empty repo
-
-```sh
-cp -R simple/. /path/to/new-repo/     # or: cp -R advanced/. /path/to/new-repo/
-# then replace / create the project's own README.md (not included)
-```
-
-Fill in:
-
-1. `dev/README.md` — local setup, test/build commands, project-specific ground rules.
-2. `docs/adr/` — first real ADR when the stack or major architecture is chosen (often `adr-000-…`).
-3. `dev/STATUS.md` — current focus for the first session.
-
-Optional: commit `.cursor/rules/workflow.mdc` if you use Cursor — or gitignore it and keep it local.
-
-## Agent prompts that should work immediately
-
-```
-This project is a data transformation tool and a static HTML site for data visualisation (charts, metrics, insights). Input raw data are stored as json files. Create a task doc to establish a technology stack and project folder structure.
-```
-
-```
-Draft a task doc to implement XYZ.
-```
-
-```
-What are current open tasks?
-```
-
-```
-Check the done tasks. Is it worth cutting a release?
-```
-
-```
-Prepare a release: follow dev/RELEASE.md.
-```
-
-**Simple:** agents create `dev/tasks/<kebab-id>.md` from the task template, add a `## <task-id>` block to `BACKLOG.md`, and keep `STATUS.md` current. On release, shipped behavior moves to `CHANGELOG.md` and task detail files are deleted.
-
-**Advanced:** same flow, but agents create `dev/tasks/<task-id>/` from `TEMPLATE/` (main file `task.md`), using `[tracker-id-]slug` IDs when a ticket exists. On release, whole finished task folders are deleted after promoting durable content.
 
 ## Docs roles
 
@@ -189,7 +197,7 @@ Task detail files are temporary. After release, shipped behavior lives in `CHANG
 
 Shared in both: `dev/` = how we run the project; `docs/` = durable product/architecture knowledge; release cleans finished task artifacts after promoting lasting content.
 
-## Comparison (quick)
+## Comparison
 
 | Concern | Simple | Advanced |
 |---------|--------|----------|

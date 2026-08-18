@@ -22,7 +22,7 @@ You can also use the `advanced` template as an addition to Jira.
 
 So, the main benefit of the markdown-based tracker is speed. The main sacrifice is multi-user support and separation of concerns.
 
-## How does it compare with other tools?
+## How does it compare with similar tools?
 
 These all live in the “help humans and coding agents run work from the repo” space. They are not the same kind of thing.
 
@@ -38,3 +38,26 @@ These all live in the “help humans and coding agents run work from the repo”
 
 
 **TL;DR:** md-harness is a layout and release habit, not a product. Backlog.md is the closest neighbor if you mainly want task files. Spec Kit is heavier and feature-shaped. Beads solves a similar problem with the opposite storage bet (DB/graph instead of freeform markdown).
+
+## I already have a repository with a working project, can I install md-harness into it?
+
+Yes, but you need to carefully adapt it without overwriting your files. Chances are, you already have top-level `CHANGELOG.md`, `AGENTS.md` and `docs` folder.
+
+Try using the following prompt with your agent:
+
+```
+Install simple md-harness from https://github.com/ruslanbes/md-harness into this existing repo.
+Merge, do not overwrite:
+- If a file already exists, leave its content. Append or add a pointer only when needed; say what you skipped.
+- AGENTS.md: if missing, copy it. If it exists, add a line to follow dev/README.md.
+- CHANGELOG.md: keep the existing file. If it has no [Unreleased] section, add one. Do not create a second changelog.
+- docs/: add adr/ and faq/ next to whatever is already there. Do not replace docs/.
+- .cursor/rules/workflow.mdc: add alongside other rules; do not replace the rules folder.
+- dev/: if the folder does not exist, copy it. If it does, pick another name (ask me first) and update every harness path to match.
+Then list what you added vs what you merged.
+```
+
+
+## What should I add to gitignore?
+
+Normally nothing. You might add `.cursor/` if you prefer to keep its configuration local. If you don't use Cursor, you can delete that dir. 
