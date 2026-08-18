@@ -41,7 +41,7 @@ Each task doc contains (usually):
 - Problem statement
 - List of decisions
 - Implementation details
-- Done when checklist
+- "Done when" checklist
 
 **List of decisions** is what you (a human) mainly want to read. You are the decision maker and only you are responsible for locking these decisions. Agent can suggest them, but your voice is final.
 
