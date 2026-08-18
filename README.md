@@ -34,11 +34,7 @@ This project is: <describe your project and requirements>. Create a first task d
 
 ## What is the task doc?
 
-It's a mix of a [User Story](https://en.wikipedia.org/wiki/User_story) and a [Specification](https://en.wikipedia.org/wiki/Specification_(technical_standard)).
-
-**Simple:** agents create `dev/tasks/<kebab-id>.md` from the task template, add a `## <task-id>` block to `BACKLOG.md`, and keep `STATUS.md` current. On release, shipped behavior moves to `CHANGELOG.md` and task docs are deleted.
-
-**Advanced:** same flow, but agents create `dev/tasks/<task-id>/` from `TEMPLATE/` (main file `task.md`), using `[tracker-id-]slug` IDs when a ticket exists. On release, whole finished task folders are deleted after promoting durable content.
+It's a ticket plus a short design note you lock before coding.
 
 Each task doc contains (usually):
 
@@ -49,7 +45,11 @@ Each task doc contains (usually):
 
 **List of decisions** is what you (a human) mainly want to read. You are the decision maker and only you are responsible for locking these decisions. Agent can suggest them, but your voice is final.
 
-Check other sections in the [simple/dev/tasks/TEMPLATE.md](simple/dev/tasks/TEMPLATE.md).
+### Where do they live?
+
+**Simple:** agents create `dev/tasks/<kebab-id>.md` from the task template, add a `## <task-id>` block to `BACKLOG.md`, and keep `STATUS.md` current. On release, shipped behavior moves to `CHANGELOG.md` and task docs are deleted.
+
+**Advanced:** same flow, but agents create `dev/tasks/<task-id>/` from `TEMPLATE/` (main file `task.md`), using `[tracker-id-]slug` IDs when a ticket exists. On release, whole finished task folders are deleted after promoting durable content.
 
 ## Implementing a task
 
