@@ -36,15 +36,15 @@ In [BACKLOG.md](BACKLOG.md):
 
 Per [tasks/README.md](tasks/README.md): delete `dev/tasks/<task-id>.md` for tasks shipped in this release or cancelled.
 
-Keep the `dev/tasks/` folder and `tasks/README.md`. Behavior should live in CHANGELOG, ADRs, FAQ, and layer READMEs — not in deleted specs.
+Keep the `dev/tasks/` folder and `tasks/README.md`. Behavior should live in CHANGELOG, ADRs, and layer READMEs or other project docs — not in deleted specs.
 
 #### 2.1 Handling detailed task docs
 
 - Task docs are temporary artifacts. On release we clean them up.
 - Read each detailed task doc.
-- Check if any durable docs (`dev/README.md`, FAQ, ADRs, layer READMEs) reference the task doc.
+- Check if any durable docs (`dev/README.md`, ADRs, layer READMEs, other project docs) reference the task doc.
 - Extract important architectural decisions and contracts, summaries of diagrams and tables, and user-facing behavior.
-- Check if that info is covered where it belongs: process/ground rules in `dev/README.md`; product/architecture in FAQ, ADRs, or layer READMEs.
+- Check if that info is covered where it belongs: process/ground rules in `dev/README.md`; product/architecture in ADRs or layer READMEs (or other docs you maintain).
 - If those docs have gaps, move the extracted material there. Create new durable docs if needed; review them before commit.
 
 ### 3. Refresh session status
@@ -63,7 +63,7 @@ Edit [CHANGELOG.md](../CHANGELOG.md):
 2. Add a new dated section, e.g. `## [0.2.0] - YYYY-MM-DD`.
 3. Move items from `[Unreleased]` into that section.
 4. Leave `[Unreleased]` empty (or with a placeholder comment) for the next cycle.
-5. Rephrase for **readers of the repo** — user-facing behavior, not internal implementation trivia. Link ADRs or FAQ where useful.
+5. Rephrase for **readers of the repo** — user-facing behavior, not internal implementation trivia. Link ADRs or other project docs where useful.
 6. Do **not** add a “Completed task specs” line under Removed.
 7. Do **not** stage changes as part of release *preparation* unless the project’s workflow says otherwise.
 

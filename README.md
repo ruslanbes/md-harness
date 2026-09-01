@@ -12,7 +12,7 @@ Launch a coding agent or IDE of your choice (Cursor, VScode, Claude, Gemini etc.
 
 > Install a simple md-harness from https://github.com/ruslanbes/md-harness
 
-Or (if you want to do it by hand): 
+Or do it by hand: 
 
 ```sh
 git clone https://github.com/ruslanbes/md-harness.git
@@ -67,9 +67,6 @@ simple/                   ← copy these files into a new repo root
     adr/
       README.md           When/how to write ADRs
       TEMPLATE.md         Copy → adr-NNN-short-title.md
-    faq/
-      README.md           When/how to write FAQ pages
-      TEMPLATE.md         Copy → docs/faq/<topic>.md
   dev/                    How we run the project
     README.md             Setup, ground rules, doc index
     BACKLOG.md            Flat task index
@@ -99,7 +96,7 @@ Instead of a single `TEMPLATE.md` / `tasks/<id>.md`, each task is a folder with 
 | Kind | Location | Role |
 |------|----------|------|
 | Process | `dev/` | How we run the project: setup, ground rules, release runbook, plus living backlog/status and temporary task detail |
-| Knowledge | `docs/` (ADRs, FAQ), root `CHANGELOG.md`, layer READMEs you add | Product and architecture knowledge that outlives any task |
+| Knowledge | `docs/` (ADRs), root `CHANGELOG.md`, layer READMEs and other project docs you add | Product and architecture knowledge that outlives any task |
 | Session work | `dev/BACKLOG.md`, `dev/STATUS.md`, `dev/tasks/*` | Current work tracking; task artifacts are cleaned on release |
 
 ## Development flow (`simple/`)
@@ -132,7 +129,7 @@ flowchart TD
   TD -->|yes| Task[dev/tasks/id.md]
   TD -->|no| Rules[AGENTS.md → dev/README.md]
   Task --> Rules
-  Rules --> ADR[docs/adr/ and docs/faq/ as needed]
+  Rules --> ADR[docs/adr/ and other project docs as needed]
 ```
 
 ### 3. Prompt → task doc
@@ -162,7 +159,7 @@ flowchart TD
   Unreleased --> Backlog[Mark backlog status done / hand off]
 ```
 
-While building, short-lived design stays in the task doc. Promote lasting decisions into ADRs / FAQ / `dev/README.md` when they should outlive the task — often at release, sometimes earlier.
+While building, short-lived design stays in the task doc. Promote lasting decisions into ADRs, `dev/README.md`, or other project docs when they should outlive the task — often at release, sometimes earlier.
 
 ### 5. Release: promote, then clean
 
@@ -172,11 +169,11 @@ flowchart TD
   PromoteTask --> Gaps{Lasting content missing from durable docs?}
   Gaps -->|process / ground rules| DevReadme[Update dev/README.md]
   Gaps -->|architecture| ADR[Update docs/adr/…]
-  Gaps -->|concepts / how-tos| FAQ[Update docs/faq/…]
+  Gaps -->|concepts / how-tos| Docs[Update layer READMEs or other project docs]
   Gaps -->|user-facing behavior| CLAlready[Already in CHANGELOG]
   DevReadme --> Version
   ADR --> Version
-  FAQ --> Version
+  Docs --> Version
   CLAlready --> Version
   Gaps -->|no gaps| Version["Promote [Unreleased] → dated [X.Y.Z]"]
   Version --> CleanBacklog[Remove shipped / cancelled backlog rows]
@@ -184,7 +181,7 @@ flowchart TD
   DeleteTasks --> Status[Refresh STATUS.md for what's next]
 ```
 
-Task detail files are temporary. After release, shipped behavior lives in `CHANGELOG.md`; contracts and concepts live in ADRs, FAQ, layer READMEs, and process notes in `dev/README.md`.
+Task detail files are temporary. After release, shipped behavior lives in `CHANGELOG.md`; contracts and concepts live in ADRs, layer READMEs, other project docs, and process notes in `dev/README.md`.
 
 ## Variants
 

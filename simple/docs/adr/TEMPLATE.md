@@ -2,7 +2,7 @@
 
 - **Status:** Proposed
 - **Date:** YYYY-MM-DD
-- **Related:** <!-- other ADRs, FAQ, issues -->
+- **Related:** <!-- other ADRs, layer READMEs, issues -->
 
 ## Context
 

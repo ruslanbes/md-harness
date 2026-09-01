@@ -35,7 +35,6 @@ How we run this project: ground rules, setup, release process, and current work 
 | Doc | Role |
 |-----|------|
 | [`docs/adr/`](../docs/adr/) | Architecture Decision Records |
-| [`docs/faq/`](../docs/faq/) | Durable concepts and how-tos |
 | [`CHANGELOG.md`](../CHANGELOG.md) | Shipped user-facing history |
 
-<!-- Link concrete ADRs and FAQ pages here as they appear. -->
+<!-- Link concrete ADRs and other project docs here as they appear. -->

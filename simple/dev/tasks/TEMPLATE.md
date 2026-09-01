@@ -31,7 +31,7 @@ Rough implementation details.
 ## Done when
 
 - [ ] Observable acceptance criteria (build success, tests).
-- [ ] Durable docs updated if contracts or user-facing behavior changed (`dev/README.md` / ADR / FAQ / layer README as needed).
+- [ ] Durable docs updated if contracts or user-facing behavior changed (`dev/README.md` / ADR / layer README or other project docs as needed).
 - [ ] Anything else.
 
 ## Notes

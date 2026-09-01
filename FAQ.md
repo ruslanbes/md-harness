@@ -32,8 +32,8 @@ These all live in the “help humans and coding agents run work from the repo”
 | **What it is**       | File templates + process conventions you copy into a repo                      | Task manager product (CLI, board, optional MCP)                | Spec-driven workflow toolkit (CLI + agent slash commands)   | Agent-oriented issue tracker (`bd`) with a graph DB               |
 | **Storage**          | Plain markdown (and whatever else you put next to tasks)                       | Plain markdown tasks, usually edited via the tool              | Markdown specs / plans / task lists under a Spec Kit layout | Dolt-backed DB (not freeform markdown TODOs)                      |
 | **Runtime**          | None — editors and agents read files                                           | Install and run `backlog`                                      | Install `specify`; wire slash commands into an agent        | Install and run `bd`                                              |
-| **Main focus**       | Ongoing process: backlog, session status, ADRs/FAQ, changelog, release cleanup | Managing and visualizing tasks                                 | Building a feature: specify → plan → tasks → implement      | Long-horizon agent work: deps, ready queue, multi-agent claiming  |
-| **Docs / decisions** | First-class (`docs/adr`, FAQ, promote on release)                              | Secondary to task tracking                                     | Specs are the center for a change; not a full ADR/FAQ kit   | Project memory via the tool (`remember` / `prime`), not ADRs      |
+| **Main focus**       | Ongoing process: backlog, session status, ADRs, changelog, release cleanup | Managing and visualizing tasks                                 | Building a feature: specify → plan → tasks → implement      | Long-horizon agent work: deps, ready queue, multi-agent claiming  |
+| **Docs / decisions** | First-class (`docs/adr`, promote on release)                              | Secondary to task tracking                                     | Specs are the center for a change; not a full ADR/FAQ kit   | Project memory via the tool (`remember` / `prime`), not ADRs      |
 | **Best fit**         | Solo monorepo that wants a light, editable harness with no install             | Want a real markdown task board + CLI without inventing format | Want a structured SDD loop for larger features              | Want structured issues for agents more than human-edited markdown |
 
 
@@ -51,7 +51,7 @@ Merge, do not overwrite:
 - If a file already exists, leave its content. Append or add a pointer only when needed; say what you skipped.
 - AGENTS.md: if missing, copy it. If it exists, add a line to follow dev/README.md.
 - CHANGELOG.md: keep the existing file. If it has no [Unreleased] section, add one. Do not create a second changelog.
-- docs/: add adr/ and faq/ next to whatever is already there. Do not replace docs/.
+- docs/: add adr/ next to whatever is already there. Do not replace docs/.
 - .cursor/rules/workflow.mdc: add alongside other rules; do not replace the rules folder.
 - dev/: if the folder does not exist, copy it. If it does, pick another name (ask me first) and update every harness path to match.
 Then list what you added vs what you merged.
