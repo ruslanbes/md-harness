@@ -4,4 +4,4 @@ All notable changes to this project. Format based on [Keep a Changelog](https://
 
 ## [Unreleased]
 
-<!-- Move significant work here as it lands; promote to a dated section on release (see dev/RELEASE.md). -->
+<!-- Move significant work here as it lands; promote to a dated section on release (see dev/RELEASE.md). Cleanup of finished tasks: see dev/CLEANUP.md. -->

@@ -34,4 +34,4 @@ Edit `task.md`. Add other files in the same folder as needed. Do not leave a fol
 
 ## Lifetime
 
-Task folders are temporary: delete the whole `dev/tasks/<task-id>/` directory on release when the task ships or is cancelled (see [`../RELEASE.md`](../RELEASE.md)). This README and `TEMPLATE/` stay.
+Task folders are temporary: delete the whole `dev/tasks/<task-id>/` directory on cleanup when the task ships or is cancelled (see [`../CLEANUP.md`](../CLEANUP.md)). This README and `TEMPLATE/` stay.

@@ -47,9 +47,9 @@ Each task doc contains (usually):
 
 ### Where do they live?
 
-**Simple:** agents create `dev/tasks/<kebab-id>.md` from the task template, add a `## <task-id>` block to `BACKLOG.md`, and keep `STATUS.md` current. On release, shipped behavior moves to `CHANGELOG.md` and task docs are deleted.
+**Simple:** agents create `dev/tasks/<kebab-id>.md` from the task template, add a `## <task-id>` block to `BACKLOG.md`, and keep `STATUS.md` current. On cleanup, shipped behavior moves to `CHANGELOG.md` and task docs are deleted.
 
-**Advanced:** same flow, but agents create `dev/tasks/<task-id>/` from `TEMPLATE/` (main file `task.md`), using `[tracker-id-]slug` IDs when a ticket exists. On release, whole finished task folders are deleted after promoting durable content.
+**Advanced:** same flow, but agents create `dev/tasks/<task-id>/` from `TEMPLATE/` (main file `task.md`), using `[tracker-id-]slug` IDs when a ticket exists. On cleanup, whole finished task folders are deleted after promoting durable content.
 
 ## Implementing a task
 
@@ -71,7 +71,8 @@ simple/                   ← copy these files into a new repo root
     README.md             Setup, ground rules, doc index
     BACKLOG.md            Flat task index
     STATUS.md             Current focus / blockers / session notes
-    RELEASE.md            Promote Unreleased → version; clean tasks
+    CLEANUP.md            Promote durable content; remove finished tasks
+    RELEASE.md            Promote Unreleased → version; tag
     tasks/
       README.md           Optional detail files (temporary)
       TEMPLATE.md         Copy → dev/tasks/<task-id>.md
@@ -89,21 +90,21 @@ dev/tasks/
                       (other files in the task folder are optional, free-form)
 ```
 
-Instead of a single `TEMPLATE.md` / `tasks/<id>.md`, each task is a folder with required `task.md`. Task IDs may use an optional external-tracker prefix. Release deletes the whole task folder.
+Instead of a single `TEMPLATE.md` / `tasks/<id>.md`, each task is a folder with required `task.md`. Task IDs may use an optional external-tracker prefix. Cleanup deletes the whole task folder.
 
 ## Docs roles
 
 | Kind | Location | Role |
 |------|----------|------|
-| Process | `dev/` | How we run the project: setup, ground rules, release runbook, plus living backlog/status and temporary task detail |
+| Process | `dev/` | How we run the project: setup, ground rules, cleanup and release runbooks, plus living backlog/status and temporary task detail |
 | Knowledge | `docs/` (ADRs), root `CHANGELOG.md`, layer READMEs and other project docs you add | Product and architecture knowledge that outlives any task |
-| Session work | `dev/BACKLOG.md`, `dev/STATUS.md`, `dev/tasks/*` | Current work tracking; task artifacts are cleaned on release |
+| Session work | `dev/BACKLOG.md`, `dev/STATUS.md`, `dev/tasks/*` | Current work tracking; task artifacts are cleaned via CLEANUP.md |
 
 ## Development flow (`simple/`)
 
-Rough path: **prompt → task doc → implementation → changelog → durable docs** (with cleanup at release).
+Rough path: **prompt → task doc → implementation → changelog → durable docs** (with cleanup on demand; release tags a version).
 
-Paths below match **simple** (`dev/tasks/<id>.md`). In **advanced**, substitute `dev/tasks/<id>/task.md` and delete the whole task folder on release.
+Paths below match **simple** (`dev/tasks/<id>.md`). In **advanced**, substitute `dev/tasks/<id>/task.md` and delete the whole task folder on cleanup.
 
 ### 1. End-to-end
 
@@ -112,9 +113,11 @@ flowchart LR
   P[User prompt] --> T[Task doc + backlog entry]
   T --> I[Implementation]
   I --> C["CHANGELOG (Unreleased section)"]
+  C --> K[Cleanup]
+  K --> D[Durable docs]
+  K --> X[Delete finished task files]
   C --> R[Release]
-  R --> D[Durable docs]
-  R --> X[Delete finished task files]
+  R --> V["Version tag / dated changelog"]
 ```
 
 ### 2. What a session reads first
@@ -159,29 +162,32 @@ flowchart TD
   Unreleased --> Backlog[Mark backlog status done / hand off]
 ```
 
-While building, short-lived design stays in the task doc. Promote lasting decisions into ADRs, `dev/README.md`, or other project docs when they should outlive the task — often at release, sometimes earlier.
+While building, short-lived design stays in the task doc. Promote lasting decisions into ADRs, `dev/README.md`, or other project docs when they should outlive the task — often at cleanup, sometimes earlier.
 
-### 5. Release: promote, then clean
+### 5. Cleanup: promote, then delete
 
 ```mermaid
 flowchart TD
-  Cut[Follow dev/RELEASE.md] --> PromoteTask[Read finished task docs]
+  Cut[Follow dev/CLEANUP.md] --> PromoteTask[Read finished task docs]
   PromoteTask --> Gaps{Lasting content missing from durable docs?}
   Gaps -->|process / ground rules| DevReadme[Update dev/README.md]
   Gaps -->|architecture| ADR[Update docs/adr/…]
   Gaps -->|concepts / how-tos| Docs[Update layer READMEs or other project docs]
-  Gaps -->|user-facing behavior| CLAlready[Already in CHANGELOG]
-  DevReadme --> Version
-  ADR --> Version
-  Docs --> Version
-  CLAlready --> Version
-  Gaps -->|no gaps| Version["Promote [Unreleased] → dated [X.Y.Z]"]
-  Version --> CleanBacklog[Remove shipped / cancelled backlog rows]
-  CleanBacklog --> DeleteTasks[Delete shipped / cancelled tasks/*.md]
+  Gaps -->|user-facing behavior| CLAlready[Already in CHANGELOG Unreleased]
+  DevReadme --> Clean
+  ADR --> Clean
+  Docs --> Clean
+  CLAlready --> Clean
+  Gaps -->|no gaps| Clean[Remove shipped / cancelled backlog rows]
+  Clean --> DeleteTasks[Delete shipped / cancelled tasks/*.md]
   DeleteTasks --> Status[Refresh STATUS.md for what's next]
 ```
 
-Task detail files are temporary. After release, shipped behavior lives in `CHANGELOG.md`; contracts and concepts live in ADRs, layer READMEs, other project docs, and process notes in `dev/README.md`.
+### 6. Release: version and tag
+
+Follow `dev/RELEASE.md`: promote `[Unreleased]` → dated `[X.Y.Z]`, bump any other version sources, commit and tag.
+
+Task detail files are temporary. After cleanup, shipped behavior lives in `CHANGELOG.md`; contracts and concepts live in ADRs, layer READMEs, other project docs, and process notes in `dev/README.md`.
 
 ## Variants
 
@@ -192,7 +198,7 @@ Task detail files are temporary. After release, shipped behavior lives in `CHANG
 | **Task ID** | kebab slug only | `[external-tracker-id-]kebab-slug` (local slug fine until a ticket exists) |
 | **When to use** | Small solo projects; tasks fit in one doc | Heavier planning, analysis, championing, coordination; Jira/Linear/etc. |
 
-Shared in both: `dev/` = how we run the project; `docs/` = durable product/architecture knowledge; release cleans finished task artifacts after promoting lasting content.
+Shared in both: `dev/` = how we run the project; `docs/` = durable product/architecture knowledge; cleanup removes finished task artifacts after promoting lasting content.
 
 ## Comparison
 
@@ -202,7 +208,7 @@ Shared in both: `dev/` = how we run the project; `docs/` = durable product/archi
 | Main task file | `dev/tasks/<id>.md` | `dev/tasks/<id>/task.md` |
 | Extra material | Inline in the same file | Free-form files/folders next to `task.md` |
 | Tracker link | Not modeled | Optional prefix on the task ID; rename when a ticket appears |
-| Release cleanup | Delete `tasks/<id>.md` | Delete whole `tasks/<id>/` folder |
+| Cleanup | Delete `tasks/<id>.md` | Delete whole `tasks/<id>/` folder |
 
 ## See also
 

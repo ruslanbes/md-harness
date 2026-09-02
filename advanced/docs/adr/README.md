@@ -8,7 +8,7 @@ ADRs capture **durable** choices (stack, boundaries, contracts) that should outl
 - Defining system boundaries or data/API contracts that other work depends on.
 - Recording a trade-off so future agents do not re-litigate it in every task.
 
-Prefer a **task folder** (`dev/tasks/<task-id>/task.md` plus any supporting files you need) for short-lived design while building a feature. On release, promote lasting decisions from the task into an ADR (or a layer README / other project doc) before deleting the task folder — see [`dev/RELEASE.md`](../../dev/RELEASE.md).
+Prefer a **task folder** (`dev/tasks/<task-id>/task.md` plus any supporting files you need) for short-lived design while building a feature. On cleanup, promote lasting decisions from the task into an ADR (or a layer README / other project doc) before deleting the task folder — see [`dev/CLEANUP.md`](../../dev/CLEANUP.md).
 
 ## Conventions
 
